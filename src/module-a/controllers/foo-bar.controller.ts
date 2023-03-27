@@ -1,13 +1,14 @@
 import { Controller, Get } from "@nestjs/common";
-import { CommandBus } from "@nestjs/cqrs";
-import { FooBarCommand } from "../commands/foo-bar.command";
+import { CommandBus, EventBus } from "@nestjs/cqrs";
+import { FooBarEvent } from "../events/foo-bar.event";
 
 @Controller('/foo')
 export class FooBarController {
-  constructor(private readonly commandBus: CommandBus) { }
+  constructor(private readonly commandBus: CommandBus,
+    private readonly eventBus: EventBus) { }
 
   @Get('bar')
   async fooBar() {
-    this.commandBus.execute(new FooBarCommand('as'));
+    return this.eventBus.publish(new FooBarEvent());
   }
 }

@@ -1,6 +1,5 @@
 import { DynamicModule, Module } from "@nestjs/common";
-import { CommandBus, CqrsModule, EventBus } from "@nestjs/cqrs";
-import { FooBarCommandHandler } from "./commands/foo-bar.handler";
+import { CqrsModule } from "@nestjs/cqrs";
 import { FooBarController } from "./controllers/foo-bar.controller";
 import { FooBarEventHandler } from "./events/foo-bar.handler";
 
@@ -10,7 +9,6 @@ import { FooBarEventHandler } from "./events/foo-bar.handler";
   ],
   providers: [
     FooBarEventHandler,
-    FooBarCommandHandler,
   ],
   controllers: [
     FooBarController,
@@ -18,6 +16,17 @@ import { FooBarEventHandler } from "./events/foo-bar.handler";
 })
 export class ModuleA {
 
-  
+  static forFeature(config: any): DynamicModule {
+    console.log('do stuff with config', config);
+    return {
+      module: ModuleA,
+      providers: [
+        {
+          useValue: config.value,
+          provide: config.provide,
+        },
+      ]
+    };
+  }
 
 }
